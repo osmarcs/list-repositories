@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
 import { Container, Title, Form, SubmitButton, List } from './styles';
 import api from '../../services/api';
@@ -18,10 +18,18 @@ export default function Main() {
     const data = {
       name: response.data.full_name,
     };
-    setRepositories([...repositories, data]);
+    const newRepositories = [...repositories, data];
+    setRepositories(newRepositories);
     setNewRepo('');
     setLoading(false);
+    localStorage.setItem('repositories', JSON.stringify(newRepositories));
   };
+
+  useEffect(() => {
+    const stringRepositories = localStorage.getItem('repositories') || '[]';
+    const repositoriesJson = JSON.parse(stringRepositories);
+    setRepositories(repositoriesJson);
+  }, []);
 
   return (
     <Container>
