@@ -1,8 +1,28 @@
-import React from 'react';
-import { FaGithubAlt, FaPlus } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
 import { Container, Title, Form, SubmitButton } from './styles';
+import api from '../../services/api';
 
 export default function Main() {
+  const [newRepo, setNewRepo] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [repositories, setRepositories] = useState([]);
+
+  const handleChange = e => {
+    setNewRepo(e.target.value);
+  };
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setLoading(true);
+    const response = await api.get(`/repos/${newRepo}`);
+    const data = {
+      name: response.data.full_name,
+    };
+    setRepositories([...repositories, data]);
+    setNewRepo('');
+    setLoading(false);
+  };
+
   return (
     <Container>
       <Title>
@@ -10,12 +30,25 @@ export default function Main() {
         Hello World
       </Title>
 
-      <Form>
-        <input placeholder="Adicionar Repositorio" />
-        <SubmitButton>
-          <FaPlus color="#FFF" size={14} />
+      <Form onSubmit={handleSubmit}>
+        <input
+          placeholder="Adicionar Repositorio"
+          value={newRepo}
+          onChange={handleChange}
+        />
+        <SubmitButton isLoading={loading}>
+          {loading ? (
+            <FaSpinner color="#FFF" size={14} />
+          ) : (
+            <FaPlus color="#FFF" size={14} />
+          )}
         </SubmitButton>
       </Form>
+      <ul>
+        {repositories.map(repository => (
+          <li key={repository.name}>{repository.name}</li>
+        ))}
+      </ul>
     </Container>
   );
 }

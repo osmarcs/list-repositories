@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
 export const Title = styled.h1`
   font-size: 20px;
@@ -30,10 +30,34 @@ export const Form = styled.form`
   }
 `;
 
-export const SubmitButton = styled.button`
+const rotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+export const SubmitButton = styled.button.attrs(props => ({
+  disabled: props.isLoading,
+}))`
   background: #7159c1;
   border: 0;
   padding: 0 15px;
   margin-left: 10px;
   border-radius: 4px;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  ${props =>
+    props.isLoading &&
+    css`
+      svg {
+        animation: ${rotate} 2s linear infinite;
+      }
+    `}
 `;
