@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
-import { Container, Title, Form, SubmitButton, List } from './styles';
+import { Title, Form, SubmitButton, List } from './styles';
+import Container from '../../elements/Container';
 import api from '../../services/api';
 
 export default function Main() {
