@@ -1,29 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import Container from '../../elements/Container';
 import api from '../../services/api';
+import { Loading, Owner } from './styles';
 
 function Repository({ match }) {
   const [repository, setRepository] = useState({});
   const [issues, setIssues] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(async () => {
-    const repoName = decodeURIComponent(match.params.repository);
-    setLoading(true);
-    const [repositoryXHR, issuesXHR] = await Promise.all([
-      api.get(`/repos/${repoName}`),
-      await api.get(`/repos/${repoName}/issues`, {
-        state: 'open',
-        per_page: 5,
-      }),
-    ]);
-
-    setRepository(repositoryXHR.data);
-    setIssues(issuesXHR.data);
-    setLoading(false);
+  useEffect(() => {
+    async function fetchData() {
+      const repoName = decodeURIComponent(match.params.repository);
+      setLoading(true);
+      const [repositoryXHR, issuesXHR] = await Promise.all([
+        api.get(`/repos/${repoName}`),
+        await api.get(`/repos/${repoName}/issues`, {
+          state: 'open',
+          per_page: 5,
+        }),
+      ]);
+      setRepository(repositoryXHR.data);
+      setIssues(issuesXHR.data);
+      setLoading(false);
+    }
+    fetchData();
   }, []);
 
-  return <h1>Repository: {repository.full_name}</h1>;
+  return loading ? (
+    <Loading />
+  ) : (
+    <Container>
+      <Owner>
+        <Link to="/">Voltar aos repositórios</Link>
+        <img src={repository.owner.avatar_url} alt={repository.owner.login} />
+        <h1>{repository.name}</h1>
+        <p>{repository.description}</p>
+      </Owner>
+    </Container>
+  );
 }
 
 Repository.propTypes = {
