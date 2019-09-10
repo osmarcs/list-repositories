@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import api from '../../services/api';
 
-export default function Repository({ match }) {
+function Repository({ match }) {
   const [repository, setRepository] = useState({});
   const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -24,3 +25,12 @@ export default function Repository({ match }) {
 
   return <h1>Repository: {repository.full_name}</h1>;
 }
+
+Repository.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      repository: PropTypes.string,
+    }),
+  }).isRequired,
+};
+export default Repository;
