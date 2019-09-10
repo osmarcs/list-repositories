@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
 import { Container, Title, Form, SubmitButton, List } from './styles';
 import api from '../../services/api';
@@ -56,7 +57,9 @@ export default function Main() {
         {repositories.map(repository => (
           <li key={repository.name}>
             {repository.name}
-            <a href="">detalhes</a>
+            <Link to={`/repository/${encodeURIComponent(repository.name)}`}>
+              detalhes
+            </Link>
           </li>
         ))}
       </List>
