@@ -59,7 +59,7 @@ export default function Main() {
           <li key={repository.name}>
             {repository.name}
             <Link to={`/repository/${encodeURIComponent(repository.name)}`}>
-              detalhes
+              visualizar
             </Link>
           </li>
         ))}
